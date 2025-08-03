@@ -1,9 +1,9 @@
 
 -- Basic 
 require("basic")
--- Keymaps
-require("keymaps")
 -- Lazy
 require("config.lazy")
+-- Keymaps
+require("keymaps")
 
 
