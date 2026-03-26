@@ -26,4 +26,20 @@ vim.opt.smartcase = true                           -- Case sensitive if uppercas
 vim.opt.hlsearch = false                           -- Don't highlight search results 
 vim.opt.incsearch = true                           -- Show matches as you type
 
+-- Line adjustment
+vim.opt.wrap = true          -- Enable line wrapping
+vim.opt.linebreak = true     -- Break lines at convenient points (like spaces)
+vim.opt.showbreak = "↪ "     -- Symbol at the beginning of wrapped lines
+
+-- Auto-reload files changed outside of nvim
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  callback = function()
+    if vim.fn.mode() ~= "c" then
+      vim.cmd("checktime")
+    end
+  end,
+})
+vim.opt.updatetime = 1000    -- Check every 1 second while idle
+
 
