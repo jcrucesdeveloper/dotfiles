@@ -8,7 +8,12 @@ return {
       "nvim-tree/nvim-web-devicons", -- optional, but recommended
     },
     lazy = false,
-    config = function() 
+    config = function()
+      require("neo-tree").setup({
+        filesystem = {
+          follow_current_file = { enabled = true },
+        },
+      })
       vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { noremap = true, silent = true })
     end
   }

@@ -1,10 +1,7 @@
--- Theme and transparency
-vim.cmd.colorscheme("retrobox")
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
-vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
-
 -- Basic settings
+vim.opt.clipboard = "unnamedplus"                  -- Sync with system clipboard
+vim.opt.cmdheight = 0                              -- No gap between lualine and tmux bar
+vim.opt.autowrite = true                           -- Autosave when switching buffers/windows
 vim.opt.number = true                              -- Line numbers
 vim.opt.relativenumber = true                      -- Relative line numbers
 vim.opt.cursorline = true                          -- Highlight current line
@@ -23,7 +20,7 @@ vim.opt.autoindent = true                          -- Copy indent from current l
 -- Search settings
 vim.opt.ignorecase = true                          -- Case insensitive search
 vim.opt.smartcase = true                           -- Case sensitive if uppercase in search
-vim.opt.hlsearch = false                           -- Don't highlight search results 
+vim.opt.hlsearch = true                            -- Highlight search results (clear with <Esc>)
 vim.opt.incsearch = true                           -- Show matches as you type
 
 -- Line adjustment
@@ -31,15 +28,20 @@ vim.opt.wrap = true          -- Enable line wrapping
 vim.opt.linebreak = true     -- Break lines at convenient points (like spaces)
 vim.opt.showbreak = "↪ "     -- Symbol at the beginning of wrapped lines
 
--- Auto-reload files changed outside of nvim
-vim.opt.autoread = true
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+-- Close nvim if Neo-tree is the last window
+vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
-    if vim.fn.mode() ~= "c" then
-      vim.cmd("checktime")
+    if #vim.api.nvim_list_wins() == 1 and vim.bo.filetype == "neo-tree" then
+      vim.cmd("quit")
     end
   end,
 })
-vim.opt.updatetime = 1000    -- Check every 1 second while idle
+
+-- Auto-reload files changed outside of nvim
+vim.opt.autoread = true
+local timer = vim.uv.new_timer()
+timer:start(1000, 1000, vim.schedule_wrap(function()
+  vim.cmd("silent! checktime")
+end))
 
 
